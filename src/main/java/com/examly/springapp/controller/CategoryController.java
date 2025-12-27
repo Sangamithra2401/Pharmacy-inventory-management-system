@@ -26,18 +26,12 @@ public class CategoryController {
 
      @PostMapping
      public ResponseEntity<Category> CreateCategory(@RequestBody(required = false) Category category){
-         if (category == null) {
-             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-         }
          return new ResponseEntity<>(service.CreateCategory(category), HttpStatus.CREATED);
      }
 
      @GetMapping
      public ResponseEntity<List<Category>> GetAllCategories(){
       List<Category> list=service.GetAllCategories();
-      if(list.isEmpty()){
-         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
       return new ResponseEntity<>(list,HttpStatus.OK);
      }
 

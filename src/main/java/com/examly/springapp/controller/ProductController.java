@@ -34,7 +34,7 @@ public class ProductController {
         return new ResponseEntity<>(l, HttpStatus.OK);
     }
 
-    @GetMapping("/{id:\\d+}")
+    @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Product l = service.getProductById(id);
         return new ResponseEntity<>(l, HttpStatus.OK);
@@ -52,11 +52,6 @@ public class ProductController {
     public ResponseEntity<?> getProductByName(@PathVariable String name) {
 
         List<Product> products = service.getProductByName(name);
-
-        if (products.isEmpty()) {
-            return new ResponseEntity<>("No products found with name: " + name, HttpStatus.NOT_FOUND);
-
-        }
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

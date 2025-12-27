@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.examly.springapp.exception.NoContentException;
+import com.examly.springapp.exception.ResourceNotFoundException;
 import com.examly.springapp.model.Warehouse;
 import com.examly.springapp.repository.WarehouseRepo;
 
@@ -21,17 +23,21 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public List<Warehouse> getAllWarehouses() {
-        return repo.findAll();
+        List<Warehouse> warehouse=repo.findAll();
+        if(warehouse.isEmpty()){
+            throw new NoContentException("No Warehouse Available");
+        }
+        return warehouse;
     }
 
     @Override
     public Warehouse getWarehouseById(Long id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow(()->new ResourceNotFoundException("Warehouse is not found with respective id to update.."));
     }
 
     @Override
     public Warehouse updateWarehouse(Long id, Warehouse warehouse) {
-        Warehouse existing = repo.findById(id).orElse(null);
+        Warehouse existing = repo.findById(id).orElseThrow(()->new ResourceNotFoundException("Warehouse is not found with respective id to update.."));
         if (existing != null) {
             existing.setName(warehouse.getName());
             existing.setLocation(warehouse.getLocation());

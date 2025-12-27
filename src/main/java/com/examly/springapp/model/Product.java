@@ -1,6 +1,5 @@
 package com.examly.springapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +18,6 @@ public class Product {
     private String description;
     @ManyToOne
     @JoinColumn(name="category_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
     public Long getProductId() {
         return productId;

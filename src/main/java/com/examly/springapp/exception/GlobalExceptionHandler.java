@@ -1,5 +1,47 @@
 package com.examly.springapp.exception;
 
-public class GlobalExceptionHandler {
-    
+import java.time.LocalDateTime;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler 
+{
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ResourceErrorResponse> getErrorResponse(ResourceNotFoundException e)
+    {
+       ResourceErrorResponse rer=new ResourceErrorResponse(HttpStatus.NOT_FOUND.value(),e.getMessage(),LocalDateTime.now());
+       return new ResponseEntity<>(rer,HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResourceErrorResponse> handleAllException(Exception e)
+    {
+        ResourceErrorResponse error = new ResourceErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+               e.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(NoContentException.class)
+    public ResponseEntity<ResourceErrorResponse> handleNoContent(NoContentException ex) 
+    {
+        ResourceErrorResponse error = new ResourceErrorResponse(
+                HttpStatus.NO_CONTENT.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.NO_CONTENT);
+    }
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ResourceErrorResponse> handleBadRequest(BadRequestException e)
+    {
+        ResourceErrorResponse er=new ResourceErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),LocalDateTime.now());
+        return new ResponseEntity<>(er,HttpStatus.BAD_REQUEST);
+    }
+
+
 }

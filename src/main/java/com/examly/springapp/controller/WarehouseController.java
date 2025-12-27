@@ -45,11 +45,6 @@ public class WarehouseController {
     public ResponseEntity<?> getWarehouseByLocation(@PathVariable String location) {
 
     List<Warehouse> warehouses = service.findByLocation(location);
-
-    if (warehouses.isEmpty()) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .body("No warehouses found at location: " + location);
-    }
     return ResponseEntity.ok(warehouses);
     }
 

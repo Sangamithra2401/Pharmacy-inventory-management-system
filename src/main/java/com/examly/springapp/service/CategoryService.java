@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.examly.springapp.exception.NoContentException;
+import com.examly.springapp.exception.ResourceNotFoundException;
 import com.examly.springapp.model.Category;
 import com.examly.springapp.repository.CategoryRepo;
 
@@ -20,15 +22,19 @@ public class CategoryService {
     }
 
     public List<Category> GetAllCategories(){
-        return repo.findAll();
+        List<Category> cate=repo.findAll();
+        if(cate.isEmpty()){
+            throw new NoContentException("No Category Available");
+        }
+        return cate;
     }
 
     public Category GetCategoryById(Long id){
-        return repo.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow(()->new ResourceNotFoundException("Category is not found with respective id to update.."));
     }
 
     public Category updateCategory(int id, Category category){
-        Category existing = repo.findById((long)id).orElse(null);
+        Category existing = repo.findById((long)id).orElseThrow(()->new ResourceNotFoundException("Category is not found with respective id to update.."));
         if (existing != null) {
             existing.setCategoryName(category.getCategoryName());
             return repo.save(existing);

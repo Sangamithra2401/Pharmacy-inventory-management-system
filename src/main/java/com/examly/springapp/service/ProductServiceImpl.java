@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.examly.springapp.exception.NoContentException;
+import com.examly.springapp.exception.ResourceNotFoundException;
 import com.examly.springapp.model.Product;
 import com.examly.springapp.repository.ProductRepo;
 
@@ -21,17 +23,21 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        return repo.findAll();
+        List<Product> prod= repo.findAll();
+        if(prod.isEmpty()){
+            throw new NoContentException("No Products Available");
+        }
+        return prod;
     }
 
     @Override
     public Product getProductById(Long id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow(()->new ResourceNotFoundException("Product is not found with respective id to update.."));
     }
 
     @Override
     public Product updateProduct(Long id, Product product) {
-        Product existing = repo.findById(id).orElse(null);
+        Product existing = repo.findById(id).orElseThrow(()->new ResourceNotFoundException("Product is not found with respective id to update.."));
         if (existing != null) {
             existing.setProductName(product.getProductName());
             existing.setDescription(product.getDescription());
